@@ -1,0 +1,66 @@
+<script src="https://cdn.jsdelivr.net/npm/vexflow/build/cjs/vexflow.js"></script>
+
+<script type="module">
+    import { Vex } from "https://cdn.skypack.dev/vexflow@beta/build/esm/entry/vexflow.js";
+
+    const { Renderer, Stave } = Vex.Flow;
+
+    // Create an SVG renderer and attach it to the DIV element named "boo".
+    const div = document.getElementById("output");
+    const renderer = new Renderer(div, Renderer.Backends.SVG);
+
+    // Configure the rendering context.
+    renderer.resize(500, 500);
+    const context = renderer.getContext();
+
+    // Create a stave of width 400 at position 10, 40 on the canvas.
+    const stave = new Stave(10, 40, 400);
+
+    // Add a clef and time signature.
+    stave.addClef("treble").addTimeSignature("4/4");
+
+    notes = [];
+
+    noteHolder = getElementById("note-holder");
+    for (let i=0; i< noteHolder.children.length; i++) {
+        currElem = noteHolder.children[i];
+        notes.push(new StaveNote({
+            keys: [currElem.id],
+            duration: "q";,
+        }));
+    }
+
+    // Create a voice in 4/4 and add above notes
+    const voice = new Voice({ num_beats: 4, beat_value: 4 });
+    voice.addTickables(notes);
+
+    // Format and justify the notes to 400 pixels.
+    new Formatter().joinVoices([voice]).format([voice], 350);
+
+// Render voice
+voice.draw(context, stave);
+</script>
+
+<div id="note-holder">
+
+    {% if notes %}
+        {% for note in notes %}
+            <a id={{note}}>
+        {% endfor %}
+        <h1>Hello {{ name }}!</h1>
+        }
+    }
+    {% else %}
+        <h1>Hello, World!</h1>
+    {% endif %}
+
+</div>
+
+
+<div id="output">
+    Test
+</div>
+
+<div id="outputBravura">
+    Test2
+</div>
