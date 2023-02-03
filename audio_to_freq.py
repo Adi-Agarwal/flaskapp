@@ -9,7 +9,9 @@ from sklearn.preprocessing import *
 
 LOW_THRESHOLD = 2e-4;
 HIGH_THRESHOLD = 0.7;
-MUSIC_RANGE = [15, 8000];
+MUSIC_RANGE = np.linspace(16, 7903, 88);
+
+PITCH_RANGE = 15.55;
 
 NOTES = {
     261.63: 'C',
@@ -26,6 +28,9 @@ NOTES = {
     493.88: 'B'
 }
 
+def isValidNote(freq):
+    return freq > MUSIC_RANGE[0] and freq < MUSIC_RANGE[-1];
+
 def getFreq(start, end, sig):
     segment = sig[start:end];
     freq = np.abs(fft(segment));
@@ -37,7 +42,7 @@ def getFirstNonzero(sig, starti):
         if sig[i] != 0:
             return i;
 
-def findClosestKey(freq, d):
+def findClosestKey(freq, d=NOTES):
     keys = list(d.keys());
     for i in range(len(keys) - 1):
         if keys[i] < freq and keys[i+1] > freq:
@@ -70,17 +75,32 @@ def getNotes(fileName):
     sixteenth = onesec // 4;
     f, t, Zxx = stft(time_domain_sig, fs=sample_rate, window = 'hann', nperseg = sixteenth, noverlap = sixteenth // 8);
 
+    
+    print("Shape of Zxx is equal to (f.shape, t.shape)")
+    print("Examine a column ti to get magnitudes at that specific time")
     magZ = np.abs(Zxx);
-
+    #normalMagZ = normalize(magZ, 'l1', axis=0)
     print(magZ.shape)
     print(f.shape)
-    print(t.shape)
+    print(t)
     print(np.amax(magZ));
     med = np.median(magZ);
     
-    for i in range(len(f)):
-        for j in range(len(t)):
-            if (magZ[i][j] < med): magZ[i][j] = 0;
+    #Remove frequencies outside of musical range
+    for fi in range(len(f)):
+        if not isValidNote(f[fi]):
+            magZ[fi] = np.where(False, magZ[fi], 0);
+
+    secSize = len(t) // clip_len;
+    
+    for val in range(clip_len):
+        start = secSize * val;
+        end = secSize * val + secSize;
+        print(tuple(range(start, end)));
+        print(f[start:end])
+        mean = np.mean(f[start:end]);
+        key = findClosestKey(mean);
+        print("Mean is %f, corresponds to %s" % (mean, NOTES[key]));
 
     plt.subplot(2, 1, 2)
     plt.pcolormesh(t, f, magZ, shading='gouraud')
