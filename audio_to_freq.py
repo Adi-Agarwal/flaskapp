@@ -1,6 +1,6 @@
 from scipy.io import wavfile
 import matplotlib.pyplot as plt
-
+import math
 import numpy as np
 from IPython.display import clear_output
 from scipy.fftpack import fft, fftshift
