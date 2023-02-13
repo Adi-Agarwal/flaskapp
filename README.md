@@ -2,7 +2,7 @@ Download folder
 
 In command line:
 
-run "source ./venv/bin/activate" to enter virtual env
+run "source .venv/bin/activate" to enter virtual env
 
 run "pip install -r requirements.txt"
 
