@@ -12,6 +12,9 @@ HIGH_THRESHOLD = 0.7;
 MUSIC_RANGE = np.linspace(16, 7903, 88);
 
 PITCH_RANGE = 15.55;
+A4 = 440;
+
+LNOTES = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
 
 NOTES = {
     261.63: 'C',
@@ -50,14 +53,26 @@ def findClosestKey(freq, d=NOTES):
 
     return keys[-1];
 
+
+#time is array of time values
+#freq is frequency at each time value
+def detectNotes(time, freq, box_size):
+    ret = {};
+    time_vals = time.size // box_size;
+    for i in range(0, len(time_vals), box_size):
+        segment = freq[i : i + box_size];
+        avgFreq = segment.mean;
+        num_semitones = 12 * math.log2(avgFreq / A4);
+        ret[time_vals[i]] = LNOTES[num_semitones % 13];
+
+
+    return ret;
+
 def getNotes(fileName):
 
    
 
     sample_rate, time_domain_sig = wavfile.read("audios/C-scale.wav");
-    
-
-
     notes = [];
     frequencies = [];
 
