@@ -51,13 +51,8 @@ def findClosestKey(freq, d=NOTES):
     return keys[-1];
 
 def getNotes(fileName):
-
-   
-
     sample_rate, time_domain_sig = wavfile.read("audios/C-scale.wav");
     
-
-
     notes = [];
     frequencies = [];
 
