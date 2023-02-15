@@ -1,7 +1,8 @@
 from scipy.io import wavfile
-import parselmouth
+import parselmouth as ps
 import numpy as np
 import matplotlib.pyplot as plt
+from functools import reduce
 
 def draw_pitch(pitch):
     # Extract selected pitch contour, and
@@ -17,11 +18,9 @@ def draw_pitch(pitch):
 
 def main():
     sample_rate, audio = wavfile.read("audios/C-note.wav")
-    snd = parselmouth.Sound("audios/C-note.wav")
+    snd = ps.Sound("audios/C-note.wav")
     pitch = snd.to_pitch()
-    draw_pitch(pitch)
-    #time, frequency, confidence, activation = crepe.predict(audio, sample_rate, viterbi=True)
-    
+    frequencies = pitch.selected_array['frequency'] # Extract the pitch frequencies
 
 if __name__ == "__main__":
     main()
